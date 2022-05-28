@@ -11,9 +11,6 @@ I used AWS as cloud provider and the tools Git ,K8S and Jenkins to achieve this 
  
 ## Steps
 
-### Jenkins
-
-
 * Install git command line in your local env
 * Install Jenkins server to trigger the updates in My GitHub repo by
 “Web Hook” and Deploy the updates to containers.
