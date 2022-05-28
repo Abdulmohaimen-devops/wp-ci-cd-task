@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: wpcanary-service
+  annotations:
+    prometheus.io/scrape: 'true'
+spec:
+  ports:
+  - port: 80
+    nodePort: 8082
+    targetPort: wpcanary-port
+    protocol: TCP
+  selector:
+    app: wordpress
+    track: canary
+  type: NodePort
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: wpcanary-deployment
+  labels:
+    app: wordpress
+spec:
+  selector:
+    matchLabels:
+      app: wordpress
+      track: canary
+  replicas: $CANARY_REPLICAS
+  template:
+    metadata:
+      labels:
+        app: wordpress
+        track: canary
+    spec:
+      containers:
+      - name: wordpress
+        image: $DOCKER_IMAGE_NAME:$BUILD_NUMBER
+        ports:
+        - containerPort: 80
+          name: wpcanary-port
